@@ -1,0 +1,11 @@
+
+RFC defining the HTTP protocol 1.0: https://www.rfc-editor.org/info/rfc1945
+Non-blocking I/O: https://www.ibm.com/docs/en/i/7.2.0?topic=designs-example-nonblocking-io-select
+
+
+https://github.com/cclaude42/webserv?tab=readme-ov-file
+https://github.com/trungams/http-server
+https://www.alimnaqvi.com/blog/webserv
+https://github.com/Kaydooo/Webserv_42
+https://m4nnb3ll.medium.com/webserv-building-a-non-blocking-web-server-in-c-98-a-42-project-04c7365e4ec7
+https://nginx.org/en/docs/http/configuring_https_servers.html
