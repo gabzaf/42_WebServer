@@ -7,6 +7,11 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <sstream>
+#include <string>
 
 class	LocationConfig
 {

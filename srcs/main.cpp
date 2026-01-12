@@ -5,10 +5,9 @@
 
 int	main(int ac, char **av)
 {
+	std::string	config_file = "config/default.conf";
 	if (ac > 1)
 		config_file = av[1];
-	else if (ac < 1)
-		std::string	config_file = "config/default.conf";
 	try
 	{
 		Config	config(config_file);
