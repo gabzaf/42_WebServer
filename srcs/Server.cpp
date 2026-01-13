@@ -650,54 +650,59 @@ bool Server::isMethodAllowed(const std::string &method,
   return (false);
 }
 
-std::string Server::resolvePath(const std::string &path,
-                                const LocationConfig *loc,
-                                const ServerConfig &config) {
-  std::string root = config.root;
-  std::string fullPath;
+std::string	Server::resolvePath(const std::string &path, const LocationConfig *loc, const ServerConfig &config)
+{
+	std::string	root = config.root;
+	std::string	fullPath;
 
-  if (loc && !loc->root.empty()) {
-    root = loc->root;
-    if (!root.empty() && root[root.size() - 1] == '/')
-      root = root.substr(0, root.size() - 1);
-    
-    if (!loc->path.empty() && loc->path[0] != '~') {
-      size_t matchLen = loc->path.length();
-      std::string remainingPath;
-      if (path.length() >= matchLen)
-          remainingPath = path.substr(matchLen);
-      else if (path + "/" == loc->path)
-          remainingPath = ""; // Exact match minus trailing slash
-      
-      if (!remainingPath.empty() && remainingPath[0] != '/' && !root.empty() && root[root.size()-1] != '/')
-          fullPath = root + "/" + remainingPath;
-      else
-          fullPath = root + remainingPath;
-    } else {
-      fullPath = root + path;
-    }
-  } else {
-    if (root.empty()) root = ".";
-    if (!root.empty() && root[root.size() - 1] == '/')
-      root = root.substr(0, root.size() - 1);
-    fullPath = root + path;
-  }
-
-  struct stat s;
-  if (stat(fullPath.c_str(), &s) == 0 && S_ISDIR(s.st_mode)) {
-    if (loc && !loc->index.empty()) {
-      for (size_t i = 0; i < loc->index.size(); ++i) {
-        std::string indexPath = fullPath;
-        if (indexPath[indexPath.size() - 1] != '/')
-          indexPath += "/";
-        indexPath += loc->index[i];
-        struct stat idxS;
-        if (stat(indexPath.c_str(), &idxS) == 0 && S_ISREG(idxS.st_mode))
-          return (indexPath);
-      }
-    }
-  }
-  return (fullPath);
+	if (loc && !loc->root.empty())
+	{
+		root = loc->root;
+		if (!root.empty() && root[root.size() - 1] == '/')
+			root = root.substr(0, root.size() - 1);
+		if (!loc->path.empty() && loc->path[0] != '~')
+		{
+			size_t		matchLen = loc->path.length();
+			std::string	remainingPath;
+			if (path.length() >= matchLen)
+				remainingPath = path.substr(matchLen);
+			else if (path + "/" == loc->path)
+				remainingPath = ""; // Exact match minus trailing slash
+			if (!remainingPath.empty() && remainingPath[0] != '/' &&
+					!root.empty() && root[root.size()-1] != '/')
+				fullPath = root + "/" + remainingPath;
+			else
+				fullPath = root + remainingPath;
+		}
+		else
+			fullPath = root + path;
+	}
+	else
+	{
+		if (root.empty())
+			root = ".";
+		if (!root.empty() && root[root.size() - 1] == '/')
+			root = root.substr(0, root.size() - 1);
+		fullPath = root + path;
+	}
+	struct stat	s;
+	if (stat(fullPath.c_str(), &s) == 0 && S_ISDIR(s.st_mode))
+	{
+		if (loc && !loc->index.empty())
+		{
+			for (size_t i = 0; i < loc->index.size(); ++i)
+			{
+				std::string indexPath = fullPath;
+				if (indexPath[indexPath.size() - 1] != '/')
+					indexPath += "/";
+				indexPath += loc->index[i];
+				struct stat	idxS;
+				if (stat(indexPath.c_str(), &idxS) == 0 && S_ISREG(idxS.st_mode))
+					return (indexPath);
+			}
+		}
+	}
+	return (fullPath);
 }
 
 void Server::serveFile(int fd, const std::string &path,
