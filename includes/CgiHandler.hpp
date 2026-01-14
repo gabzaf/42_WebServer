@@ -10,7 +10,7 @@
 class	CgiHandler
 {
 	private:
-		const HttpRequest		&_request;
+		const HttpRequest			&_request;
 		std::string				_scriptPath;
 		std::string				_interpreterPath;
 		std::string				_pathInfo;

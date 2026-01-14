@@ -17,7 +17,7 @@ int	main(int ac, char **av)
 			return (1);
 		}
 	const std::vector<ServerConfig>	&configs = config.getServers();
-	std::cout << "Config parsed. Starting server..." << std::endl;
+	std::cout << "Starting server..." << std::endl;
 	Server	server(configs);
 	server.run();
 	}
