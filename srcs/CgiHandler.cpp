@@ -187,36 +187,29 @@ std::string	CgiHandler::execute()
 			}
 			elapsed_ms += 100;
 		}
-
-    // Drain remaining output
-    int flags = fcntl(pipe_out[0], F_GETFL, 0);
-    fcntl(pipe_out[0], F_SETFL, flags | O_NONBLOCK);
-    while ((bytes = read(pipe_out[0], buffer, sizeof(buffer) - 1)) > 0) {
-      buffer[bytes] = '\0';
-      output += buffer;
-    }
-
-    if (!exited) {
-      kill(pid, SIGKILL);
-      waitpid(pid, NULL, 0);
-      return ("Status: 504 Gateway Timeout\r\n\r\nCGI script timed out");
-    }
-
-    // Capture remaining output after exit
-    while ((bytes = read(pipe_out[0], buffer, sizeof(buffer) - 1)) > 0) {
-      buffer[bytes] = '\0';
-      output += buffer;
-    }
-    close(pipe_out[0]);
-
-    if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-      return ("Status: 500 Internal Server Error\r\n\r\nCGI script exited with "
-              "error");
-    
-    // Check if output contains headers
-    if (output.find("Content-Type:") == std::string::npos && output.find("Status:") == std::string::npos && output.find("\r\n\r\n") == std::string::npos)
-        return ("Status: 500 Internal Server Error\r\n\r\nCGI did not produce valid headers");
-
-    return (output);
-  }
+		int flags = fcntl(pipe_out[0], F_GETFL, 0);
+		fcntl(pipe_out[0], F_SETFL, flags | O_NONBLOCK);
+		while ((bytes = read(pipe_out[0], buffer, sizeof(buffer) - 1)) > 0)
+		{
+			buffer[bytes] = '\0';
+			output += buffer;
+		}
+		if (!exited)
+		{
+			kill(pid, SIGKILL);
+			waitpid(pid, NULL, 0);
+			return ("Status: 504 Gateway Timeout\r\n\r\nCGI script timed out");
+		}
+		while ((bytes = read(pipe_out[0], buffer, sizeof(buffer) - 1)) > 0)
+		{
+			buffer[bytes] = '\0';
+			output += buffer;
+		}
+		close(pipe_out[0]);
+		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+			return ("Status: 500 Internal Server Error\r\n\r\nCGI script exited with ""error");
+		if (output.find("Content-Type:") == std::string::npos && output.find("Status:") == std::string::npos && output.find("\r\n\r\n") == std::string::npos)
+			return ("Status: 500 Internal Server Error\r\n\r\nCGI did not produce valid headers");
+		return (output);
+	}
 }

@@ -89,6 +89,7 @@ void	HttpRequest::parse(const std::string &raw_request)
 	}
 }
 
-const std::map<std::string, std::string>& HttpRequest::getHeaders() const {
-return (_headers);
+const std::map<std::string, std::string>& HttpRequest::getHeaders() const
+{
+	return (_headers);
 }
