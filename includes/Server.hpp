@@ -22,21 +22,13 @@ class	HttpRequest;
 class	Server
 {
 	private:
-		// Map of port -> listening_socket_fd
 		std::map<int, int>				_port_to_socket;
-		// Map of listening_socket_fd -> vector of ServerConfig
 		std::map<int, std::vector<ServerConfig> >	_socket_configs;
-		// List of all listening fds
 		std::vector<int>				_server_sockets;
-		//struct sockaddr_in _address;
 		std::vector<struct pollfd>			_fds;
-		// Response buffer per client
 		std::map<int, std::string>			_responses;
-		// Request buffer per client
 		std::map<int, std::string>			_requests;
-		// Clients to close after sending response
 		std::set<int>					_close_requests;      
-		// Timeout management
 		std::map<int, size_t>				_last_activity;
 		size_t						_current_tick;
 

@@ -21,9 +21,8 @@ class	CgiHandler
 		void					freeEnvCstrArray(char **envp) const;
 	
 	public:
-		CgiHandler(const HttpRequest &request, const std::string &scriptPath, 
-                   const std::string &interpreterPath, const std::string &pathInfo);
+		CgiHandler(const HttpRequest &request, const std::string &scriptPath, const std::string &interpreterPath, const std::string &pathInfo);
 		~CgiHandler();
 
-		std::string				execute();
+		std::string	execute();
 };
