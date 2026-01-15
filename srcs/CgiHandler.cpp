@@ -183,7 +183,10 @@ std::string	CgiHandler::execute()
 			}
 			else if (poll_res < 0)
 			{
-				//poll error
+				kill(pid, SIGKILL);
+				waitpid(pid, NULL, 0);
+				close(pipe_out[0]);
+				return ("Status: 500 Internal Server Error\r\n\r\nCGI poll system failure");
 			}
 			elapsed_ms += 100;
 		}
