@@ -1,6 +1,6 @@
 # webserv
 
-HTTP/1.1 server in C++98, written for 42's **webserv** subject (Jan 2026).
+HTTP/1.1 server in C++98, written for 42's **webserv** subject.
 
 It parses an nginx-style config, listens on one or more ports, and serves requests from a single `poll()` event loop: static files, uploads, DELETE, CGI, autoindex, redirects, custom error pages, and virtual hosts.
 
