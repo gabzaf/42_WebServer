@@ -24,32 +24,6 @@ curl -v http://127.0.0.1:1250/
 
 ---
 
-## Why two GitHub repos?
-
-They are **not clones of each other**. Same project, two snapshots.
-
-| | `gabzaf/42_webServ` (local: `~/42_webServ`) | **`gabzaf/WSToPresent` (this repo)** |
-|---|---|---|
-| Last commit | 10 Jan 2026 (`go`) | **15 Jan 2026** (`CgiHandler: poll error implemented`) |
-| Git history | Full build log (phases 1–3, ~17 commits) | Fresh repo created 12 Jan (`Lets present`) for evaluation |
-| Source size | ~1080 lines | **~1670 lines** |
-| What it is | Mid-project snapshot: one socket, thinner CGI | **Eval-ready:** multi-port, vhosts, CGI timeout/504, testers, defense notes |
-
-This repo has everything the other has, plus the work done in the last five days before presentation:
-
-- Multiple `listen` sockets and `Host`-header virtual hosts
-- Buffered `send()` via `POLLOUT` (partial writes)
-- CGI `poll()` on the child pipes, timeout → **504**, crash → **500**
-- PATH_INFO, `chdir` into the script dir, richer CGI env
-- `DEFENSE_GUIDE.md`, `evaluation_qa.md`, `test_eval_config.sh`
-- 42 tester binaries + `YoupiBanane/` fixture
-
-**Keep this repo. Delete `gabzaf/42_webServ` on GitHub.** The local folder `~/42_webServ` can go afterwards; it is only the older snapshot.
-
-There is also a leftover local tree `~/Documents/webServ` (even older layout, `webserv_42Porto/`). Its GitHub remote `gabzaf/webServ` is already gone.
-
----
-
 ## Folder map
 
 ```
@@ -124,24 +98,24 @@ Clients that sit idle are dropped after ~60s (`_last_activity` / `_current_tick`
 
 Checked off in `notes/task.md`. Rough timeline from the two repos:
 
-**Phase 1 — foundation** (`42_webServ`, 3–5 Jan)
+**Phase 1 — foundation** (`42_webServ`)
 
 - Config parser (`server` / `location` blocks, dispatch tables)
 - Non-blocking sockets, `poll()` loop
 - `HttpRequest` / `HttpResponse`
 
-**Phase 2 — static serving** (5 Jan)
+**Phase 2 — static serving**
 
 - GET, index files, MIME types
 - Client timeout + `disconnectClient`
 
-**Phase 3 — methods & errors** (6–8 Jan)
+**Phase 3 — methods & errors** 
 
 - POST (upload) and DELETE
 - Autoindex HTML
 - Centralized error pages
 
-**Phase 4 — eval polish** (*this* repo, 12–15 Jan)
+**Phase 4 — eval polish**
 
 - Multi-port + virtual hosts
 - CGI: env, relative paths, POST body, timeout, poll errors
@@ -239,13 +213,6 @@ siege -b -t 10S http://127.0.0.1:1250/
 Target: ~99.5%+ availability, RSS should stay flat. There are also `stress_test.sh`, `stress_test_post.sh`, `stress_test_cgi.sh` (check the URL/port inside — some still say `:8080`).
 
 ---
-
-## Defense (when you present)
-
-1. Read **`DEFENSE_GUIDE.md`** — maps each mandatory point to `Server.cpp` / `CgiHandler.cpp`.
-2. Skim **`evaluation_qa.md`** — spoken answers (`poll`, one read/write per client, no `errno` after recv, CGI, siege).
-3. Show the loop: `Server::run()` around line 75. One `poll()`, `POLLIN` + `POLLOUT` together, one `recv` / one `send` per ready client.
-4. Show CGI timeout on `infinite.py` (504) and that the server process does not die.
 
 ### Design trade-off to say out loud
 
